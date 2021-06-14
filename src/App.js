@@ -1,24 +1,48 @@
-import logo from './logo.svg';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import './App.css';
+import { decrementAction, loadDataAction, simpleAction } from './redux/Actions/Action';
+import SingleData from './component/SingleData';
 
 function App() {
+  const data = useSelector(state => state)
+
+  // const { number } = data;
+
+  const dispatch = useDispatch();
+
+  // const handleClick = () => {
+  //   dispatch(simpleAction())
+  // }
+
+  // const handleDecrement = () => {
+  //   dispatch(decrementAction())
+  // }
+
+  useEffect(() => {
+    dispatch(loadDataAction())
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/">
+          <div>
+            {/* <p>{number}</p>
+      <button onClick={handleClick}>Increment</button>
+      <button onClick={handleDecrement}>Decrement</button> */}
+            {
+              data.data?.map(d => <Link to={`/data/${d.id}`} style={{margin: '20px', display: 'block', cursor: 'pointer'}}>{d.title}</Link>)
+            }
+          </div>
+        </Route>
+        <Route path="/data/:id">
+          <SingleData />
+        </Route>
+      </Switch>
+    </BrowserRouter>
   );
 }
 
